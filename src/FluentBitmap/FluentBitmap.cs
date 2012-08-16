@@ -84,17 +84,21 @@ namespace FluentBitmap
                     using (var bitmap = new Bitmap(_width, _height, _stride,
                         _pixelFormat, new IntPtr(ptr)))
                     {
-                        if (_palette != null)
-                        {
-                            var palette = bitmap.Palette;
-                            for (int i = 0; i < _palette.Length; i++)
-                                palette.Entries[i] = _palette[i];
-                            bitmap.Palette = palette;
-                        }
-
+                        setPalette(bitmap);
                         saveAction(bitmap);
                     }
                 }
+            }
+        }
+
+        private void setPalette(Bitmap bitmap)
+        {
+            if (_palette != null)
+            {
+                var palette = bitmap.Palette;
+                for (int i = 0; i < _palette.Length; i++)
+                    palette.Entries[i] = _palette[i];
+                bitmap.Palette = palette;
             }
         }
     }

@@ -1,7 +1,7 @@
 FluentBitmap
 ============
 
-A simple, dumbed-down wrapper for System.Drawing.Bitmap.
+A simple, dumbed-down wrapper for `System.Drawing.Bitmap`.
 
 `System.Drawing.Bitmap` provides a clunky API. Using .NET's Bitmap class, you may write something similar to the following:
 
