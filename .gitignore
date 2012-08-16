@@ -7,3 +7,4 @@ TestResults
 
 # Visual Studio temp files
 *.suo
+*.user
