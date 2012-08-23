@@ -8,3 +8,6 @@ TestResults
 # Visual Studio temp files
 *.suo
 *.user
+
+# NCrunch files
+*.ncrunchsolution

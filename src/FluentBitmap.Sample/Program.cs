@@ -17,6 +17,7 @@ namespace FluentBitmap.Sample
         private const double YOffset = 0.0;
         private const int BytesPerPixel = 3;
         private const PixelFormat PixFormat = PixelFormat.Format24bppRgb;
+        private const int Quality = 100;
 
         static void Main(string[] args)
         {
@@ -30,10 +31,11 @@ namespace FluentBitmap.Sample
 
             var filePath = args[0];
             new FluentBitmap(Width, Height)
-                .SetImageFormat(ImageFormat.Png)
+                .SetImageFormat(ImageFormat.Jpeg)
                 .SetPixelFormat(PixFormat)
                 .SetStride(Width * BytesPerPixel)
                 .SetPixelData(mandelbrot)
+                .SetQuality(Quality)
                 .Save(filePath);
 
             Process.Start(filePath);
