@@ -40,6 +40,11 @@ namespace FluentBitmap
             _data = new byte[_width * _height];
         }
 
+        public static int GetMinimumStride(int imageWidth, int bytesPerPixel)
+        {
+            return 4 * ((imageWidth * bytesPerPixel + 3) / 4);
+        }
+
         public FluentBitmap SetStride(int value)
         {
             _stride = value;
