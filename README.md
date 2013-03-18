@@ -28,8 +28,7 @@ With FluentBitmap, it gets a little prettier:
 		.Select(val => Color.FromArgb(/* Define colors here */))
 		.ToArray();
 
-	new FluentBitmap(_width, _height)
-		.SetPixelFormat(PixelFormat.Format8bppIndexed)
+	new FluentBitmap(_width, _height, PixelFormat.Format8bppIndexed)
 		.SetPalette(palette)
 		.SetPixelData(_data)
 		.SetImageFormat(ImageFormat.Jpeg)
@@ -40,12 +39,12 @@ Need to save an image with lower quality, perhaps to save disk space? With the .
     var encoder = ImageCodecInfo.GetImageEncoders().Single(x => x.MimeType == "image/jpeg");
     using (var parameters = new EncoderParameters(1))
     {
-        parameters.Param[0] = new EncoderParameter(Encoder.Quality, 70); // Set quality to 70
+        parameters.Param[0] = new EncoderParameter(Encoder.Quality, 70); // Set quality to 70%
     }
     bitmap.Save(filePath, encoder, parameters);
     
 With FluentBitmap, all you need to do is:
 
-    .SetQuality(70)
+    .SetQuality(70) // Set quality to 70%
 
 Of course this is a very limited fluent interface. There are many other things you can do with the `System.Drawing.Bitmap` class that you can't do with FluentBitmap. Some day if I need more functionality, I'll add it. Until then, pull requests are welcome.

@@ -19,42 +19,69 @@ namespace FluentBitmap
                 { ImageFormat.Png, "image/png" }
             };
 
-        private readonly int _width;
-        private readonly int _height;
-        private int _stride;
+        private static readonly Dictionary<PixelFormat, int> _bitDepths =
+            new Dictionary<PixelFormat, int>()
+            {
+                { PixelFormat.Format16bppRgb555, 16 },
+                { PixelFormat.Format16bppRgb565, 16 },
+                { PixelFormat.Format24bppRgb, 24 },
+                { PixelFormat.Format32bppRgb, 32 },
+                { PixelFormat.Format1bppIndexed, 1 },
+                { PixelFormat.Format4bppIndexed, 4 },
+                { PixelFormat.Format8bppIndexed, 8 },
+                { PixelFormat.Format16bppArgb1555, 16 },
+                { PixelFormat.Format32bppPArgb, 32 },
+                { PixelFormat.Format16bppGrayScale, 16 },
+                { PixelFormat.Format48bppRgb, 48 },
+                { PixelFormat.Format64bppPArgb, 64 },
+                { PixelFormat.Canonical, 32 },
+                { PixelFormat.Format32bppArgb, 32 },
+                { PixelFormat.Format64bppArgb, 64}
+            };
+
         private byte[] _data;
-        private PixelFormat _pixelFormat = PixelFormat.Format8bppIndexed;
         private Color[] _palette;
         private ImageFormat _imageFormat = ImageFormat.Jpeg;
         private int _quality = 100;
 
-        public FluentBitmap(int pixelWidth, int pixelHeight)
+        public FluentBitmap(int pixelWidth, int pixelHeight, PixelFormat pixelFormat)
         {
             if (pixelWidth <= 0)
                 throw new ArgumentOutOfRangeException("pixelWidth", "pixelWidth must be greater than 0.");
             if (pixelHeight <= 0)
                 throw new ArgumentOutOfRangeException("pixelHeight", "pixelHeight must be greater than 0.");
-            _width = pixelWidth;
-            _height = pixelHeight;
-            _stride = _width;
-            _data = new byte[_width * _height];
+
+            PixelWidth = pixelWidth;
+            PixelHeight = pixelHeight;
+            PixelFormat = pixelFormat;
+            StrideBytes = GetMinimumStride(pixelWidth, pixelFormat);
         }
 
-        public static int GetMinimumStride(int imageWidth, int bytesPerPixel)
+        public int PixelWidth { get; private set; }
+
+        public int PixelHeight { get; private set; }
+
+        public int StrideBytes { get; private set; }
+
+        public PixelFormat PixelFormat { get; private set; }
+
+        public static int GetMinimumStride(int imagePixelWidth, int bitsPerPixel)
         {
-            return 4 * ((imageWidth * bytesPerPixel + 3) / 4);
+            const int strideIntervalBits = 32;
+
+            var maxStrideBitsPossible = imagePixelWidth * bitsPerPixel + (strideIntervalBits - 1);
+            var numIntervals = maxStrideBitsPossible / strideIntervalBits;
+            var totalStrideBits = strideIntervalBits * numIntervals;
+
+            return totalStrideBits / 8;
         }
 
-        public FluentBitmap SetStride(int value)
+        public static int GetMinimumStride(int imagePixelWidth, PixelFormat pixelFormat)
         {
-            _stride = value;
-            return this;
-        }
+            if (!_bitDepths.ContainsKey(pixelFormat))
+                throw new ArgumentOutOfRangeException("pixelFormat", string.Format("{0} is not supported.", pixelFormat));
 
-        public FluentBitmap SetPixelFormat(PixelFormat value)
-        {
-            _pixelFormat = value;
-            return this;
+            return GetMinimumStride(imagePixelWidth, _bitDepths[pixelFormat]);
         }
 
         public FluentBitmap SetPalette(Color[] value)
@@ -63,9 +90,12 @@ namespace FluentBitmap
             return this;
         }
 
-        public FluentBitmap SetPixelData(byte[] value)
+        public FluentBitmap SetPixelData(byte[] imageBytes)
         {
-            _data = value;
+            if (imageBytes != null && imageBytes.Length != StrideBytes * PixelHeight)
+                throw new ArgumentException("imageBytes.Length must be equal to StrideBytes * PixelHeight", "imageBytes");
+
+            _data = imageBytes;
             return this;
         }
 
@@ -95,6 +125,9 @@ namespace FluentBitmap
 
         private void saveBitmap(Stream writeStream)
         {
+            if (_data == null)
+                _data = new byte[StrideBytes * PixelHeight];
+
             var data = _data;
 
             unsafe
@@ -111,6 +144,9 @@ namespace FluentBitmap
 
         private void saveBitmap(string filePath)
         {
+            if (_data == null)
+                _data = new byte[StrideBytes * PixelHeight];
+
             var data = _data;
 
             unsafe
@@ -127,10 +163,7 @@ namespace FluentBitmap
 
         private unsafe Bitmap getBitmap(byte* dataPointer)
         {
-            if (_stride % 4 != 0)
-                throw new InvalidOperationException("Stride must be a multiple of 4. By default it is the same as the image width. Use SetStride() to change stride.");
-
-            var bitmap = new Bitmap(_width, _height, _stride, _pixelFormat, new IntPtr(dataPointer));
+            var bitmap = new Bitmap(PixelWidth, PixelHeight, StrideBytes, PixelFormat, new IntPtr(dataPointer));
             setPalette(bitmap);
 
             return bitmap;

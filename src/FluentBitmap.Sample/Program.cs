@@ -18,7 +18,6 @@ namespace FluentBitmap.Sample
         private const int BytesPerPixel = 3;
         private const PixelFormat PixFormat = PixelFormat.Format24bppRgb;
         private const int Quality = 100;
-        private static readonly int Stride = FluentBitmap.GetMinimumStride(Width, BytesPerPixel);
 
         static void Main(string[] args)
         {
@@ -28,21 +27,20 @@ namespace FluentBitmap.Sample
                 return;
             }
 
-            var mandelbrot = getMandelbrot();
-
             var filePath = args[0];
-            new FluentBitmap(Width, Height)
-                .SetImageFormat(ImageFormat.Jpeg)
-                .SetPixelFormat(PixFormat)
-                .SetStride(Stride)
-                .SetPixelData(mandelbrot)
-                .SetQuality(Quality)
+            var bitmap = new FluentBitmap(Width, Height, PixFormat)
+                .SetImageFormat(ImageFormat.Png)
+                .SetQuality(Quality);
+
+            var mandelbrotData = getMandelbrot(bitmap.StrideBytes);
+
+            bitmap.SetPixelData(mandelbrotData)
                 .Save(filePath);
 
             Process.Start(filePath);
         }
 
-        private static byte[] getMandelbrot()
+        private static byte[] getMandelbrot(int stride)
         {
             // Translated and tweaked from pseudocode at http://en.wikipedia.org/wiki/Mandelbrot_set#For_programmers
 
@@ -51,7 +49,7 @@ namespace FluentBitmap.Sample
             const double YMax = 1.0 / Zoom;
             const double YMin = -1.0 / Zoom;
 
-            var data = new byte[Height * Stride];
+            var data = new byte[Height * stride];
 
             var xScale = (XMax - XMin) / Width;
             var yScale = (YMax - YMin) / Height;
@@ -75,16 +73,17 @@ namespace FluentBitmap.Sample
                     }
 
                     var pixelBytes = BitConverter.GetBytes(iteration);
-                    Array.Copy(pixelBytes, 0, data, calculatePixelIndex(x, y), BytesPerPixel);
+                    var imagePixelIndex = calculatePixelIndex(x, y, stride, BytesPerPixel);
+                    Array.Copy(pixelBytes, 0, data, imagePixelIndex, BytesPerPixel);
                 }
             }
 
             return data;
         }
 
-        private static int calculatePixelIndex(int x, int y)
+        private static int calculatePixelIndex(int x, int y, int stride, int bytesPerPixel)
         {
-            return (y * Stride) + (x * BytesPerPixel);
+            return (y * stride) + (x * bytesPerPixel);
         }
     }
 }
