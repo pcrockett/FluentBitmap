@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentBitmap", "FluentBitma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentBitmap.Sample", "FluentBitmap.Sample\FluentBitmap.Sample.csproj", "{F7280D76-0A27-4C60-878D-58029B3AB3DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentBitmap.Test", "FluentBitmap.Test\FluentBitmap.Test.csproj", "{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{F7280D76-0A27-4C60-878D-58029B3AB3DE}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F7280D76-0A27-4C60-878D-58029B3AB3DE}.Release|x86.ActiveCfg = Release|x86
 		{F7280D76-0A27-4C60-878D-58029B3AB3DE}.Release|x86.Build.0 = Release|x86
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A090069F-3BD6-43B6-B8F9-A18CE9D22FF6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
