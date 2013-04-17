@@ -11,3 +11,7 @@ TestResults
 
 # NCrunch files
 *.ncrunchsolution
+
+#NUnit temp files
+*.VisualState.xml
+TestResult.xml

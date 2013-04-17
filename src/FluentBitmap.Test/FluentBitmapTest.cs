@@ -53,7 +53,7 @@ namespace FluentBitmap.Test
 
         private static int getStride(int pixWidth, int bitsPerPix)
         {
-            return FluentBitmap.GetMinimumStride(pixWidth, bitsPerPix);
+            return Wic.FluentBitmap.GetMinimumStride(pixWidth, bitsPerPix);
         }
     }
 }

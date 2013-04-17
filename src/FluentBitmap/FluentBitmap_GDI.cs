@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.IO;
 
-namespace FluentBitmap
+namespace FluentBitmap.Gdi
 {
     public class FluentBitmap
     {
@@ -101,6 +101,9 @@ namespace FluentBitmap
 
         public FluentBitmap SetImageFormat(ImageFormat value)
         {
+            if (value == null)
+                throw new ArgumentNullException("value", "value is null.");
+
             _imageFormat = value;
             return this;
         }
@@ -109,6 +112,7 @@ namespace FluentBitmap
         {
             if (quality < 0 || quality > 100)
                 throw new ArgumentException("quality must be between 0 and 100.");
+
             _quality = quality;
             return this;
         }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using System.Drawing.Imaging;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace FluentBitmap.Sample
 {
@@ -15,9 +16,8 @@ namespace FluentBitmap.Sample
         private const double Zoom = 1.0;
         private const double XOffset = 0.0;
         private const double YOffset = 0.0;
-        private const int BytesPerPixel = 3;
-        private const PixelFormat PixFormat = PixelFormat.Format24bppRgb;
-        private const int Quality = 100;
+        private static readonly PixelFormat PixFormat = PixelFormats.Bgr24;
+        private static readonly int BytesPerPixel = PixFormat.BitsPerPixel / 8;
 
         static void Main(string[] args)
         {
@@ -28,9 +28,9 @@ namespace FluentBitmap.Sample
             }
 
             var filePath = args[0];
-            var bitmap = new FluentBitmap(Width, Height, PixFormat)
-                .SetImageFormat(ImageFormat.Png)
-                .SetQuality(Quality);
+
+            var bitmap = new Wic.FluentBitmap(Width, Height, PixFormat)
+                .SetEncoder(new PngBitmapEncoder());
 
             var mandelbrotData = getMandelbrot(bitmap.StrideBytes);
 
